@@ -131,15 +131,16 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 // 				}
 				
 // 				Reviewer population break down into: Unverified, Verified, Mixed
+				String verified = jsonObject.get("verified");
 				
-				// Now we'll iterate through every top-level "key" in the JSON structure...
-				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
-					// When we write to "context" we're passing data to the reducer
-					// In this case we're passing the JSON field name (e.g. "title") and the number 1 (for 1 instance)
-					String review = entry.getValue().getAsJsonObject().getAsString("verified");
+				if (verified.equals("true") {
+					context.write(new Text("true"), one);
+				}
+				  
+				else if (verified.equals("false") {
+					context.write(new Text("false"), one);
+				}
 					
-					context.write(new Text(review), one);
-				}	
 					
 				
 				// Here we increment a counter that we can read when the job is done
