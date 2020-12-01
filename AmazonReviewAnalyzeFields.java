@@ -141,7 +141,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 
 					// JSON "arrays" have a [a, b, c] structure with elements separated by commas
 					} else if (jv.isJsonArray()) {
-						if(jv.getAsJsonArray().size() != 0){
+						if(jv.jsonObject.get("image").getAsJsonArray().size() > 0){
 							context.write(new Text(entry.getKey("image")),one);
 						}else{
 							context.write(new Text("missing"),one);
