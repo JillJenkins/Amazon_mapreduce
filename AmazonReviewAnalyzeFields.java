@@ -110,64 +110,38 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				JsonElement jsonTree = parser.parse(jsonString);
 				JsonObject jsonObject = jsonTree.getAsJsonObject();
 				
-				
-				String review = jsonObject.get("overall").getAsString();
+// 				Reviews with images more likely to be positive or negative
+// 				String review = jsonObject.get("overall").getAsString();
 				
 							
-				if (jsonObject.has("image") && review.equals("1.0")) {
-					context.write(new Text("Negative_1"), one);
-				}
-									    
-				else if (jsonObject.has("image") && review.equals("2.0")) {
-					context.write(new Text("Negative_2"), one);
-				}
-										 
-				else if (jsonObject.has("image") && review.equals("4.0")) {
-					context.write(new Text("Positive_4"), one);
-				}
-										 
-				else if (jsonObject.has("image") && review.equals("5.0")) {
-					context.write(new Text("Positive_5"), one);
-				}
-				
-				
-// 				// Now we'll iterate through every top-level "key" in the JSON structure...
-// 				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
-// 					// When we write to "context" we're passing data to the reducer
-// 					// In this case we're passing the JSON field name (e.g. "title") and the number 1 (for 1 instance)
-// 					context.write(new Text(entry.getKey()),one);
-					
-// 					// Now let's get the value of this field for further analysis:
-// 					JsonElement jv = entry.getValue();
-					
-// 					// Report on the field value
-// 					if (jv.isJsonNull()) {
-// 						context.write(new Text(entry.getKey()+"-null"),one);
-			
-
-// 					// JSON "arrays" have a [a, b, c] structure with elements separated by commas
-// 					} else if (jv.isJsonArray()) {
-// 						if(jv.jsonObject.get("image").getAsJsonArray().size() > 0){
-// 							context.write(new Text(entry.getKey("image")),one);
-// 						}else{
-// 							context.write(new Text("missing"),one);
-// 						}
-						
-// 					// JSON "objects" have a {a, b, c} structure with elements separated by commas
-// 					} else if (jv.isJsonObject()) {
-// 						Set<Map.Entry<String, JsonElement>> innerEntrySet = jv.getAsJsonObject().entrySet();
-// 						if(innerEntrySet.isEmpty()){
-// 							context.write(new Text(entry.getKey()+"-empty-object"),one);
-// 						}else{
-// 							context.write(new Text(entry.getKey()+"-object"),one);
-// 						}
-						
-// 					} else {
-// 						// This should never happen!
-// 						context.write(new Text(entry.getKey()+"-unknown"),one);
-// 					}
+// 				if (jsonObject.has("image") && review.equals("1.0")) {
+// 					context.write(new Text("Negative_1"), one);
 // 				}
-			
+									    
+// 				else if (jsonObject.has("image") && review.equals("2.0")) {
+// 					context.write(new Text("Negative_2"), one);
+// 				}
+										 
+// 				else if (jsonObject.has("image") && review.equals("4.0")) {
+// 					context.write(new Text("Positive_4"), one);
+// 				}
+										 
+// 				else if (jsonObject.has("image") && review.equals("5.0")) {
+// 					context.write(new Text("Positive_5"), one);
+// 				}
+				
+// 				Reviewer population break down into: Unverified, Verified, Mixed
+				
+				// Now we'll iterate through every top-level "key" in the JSON structure...
+				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
+					// When we write to "context" we're passing data to the reducer
+					// In this case we're passing the JSON field name (e.g. "title") and the number 1 (for 1 instance)
+					String review = entry.getValue().getAsJsonObject().getAsString("verified");
+					
+					context.write(new Text(review), one);
+				}	
+					
+				
 				// Here we increment a counter that we can read when the job is done
 				rowsProcessed.increment(1);
 			} catch (Exception e) {
