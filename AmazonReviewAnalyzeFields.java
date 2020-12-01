@@ -114,19 +114,19 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				String review = jsonObject.get("overall").getAsString();
 				
 							
-				if (review.equals("1.0")  && jsonObject.has("image)) {
+				if (review.equals("1.0")  && jsonObject.has("image")) {
 					context.write(new Text("Negative_1"), one);
 				}
 									    
-				else if (review.equals("2.0")  && jsonObject.has("image)) {
+				else if (review.equals("2.0")  && jsonObject.has("image")) {
 					context.write(new Text("Negative_1"), one);
 				}
 										 
-				else if (review.equals("4.0")  && jsonObject.has("image)) {
+				else if (review.equals("4.0")  && jsonObject.has("image")) {
 					context.write(new Text("Positive_4"), one);
 				}
 										 
-				else if (review.equals("5.0")  && jsonObject.has("image)) {
+				else if (review.equals("5.0")  && jsonObject.has("image")) {
 					context.write(new Text("Positive_5"), one);
 				}
 				
