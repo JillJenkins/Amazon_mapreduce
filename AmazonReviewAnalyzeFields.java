@@ -109,6 +109,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				// Now we parse the string into a JsonElement so we can dig into it
 				JsonElement jsonTree = parser.parse(jsonString);
 				
+				
 				// Now we'll iterate through every top-level "key" in the JSON structure...
 				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
 					// When we write to "context" we're passing data to the reducer
@@ -123,37 +124,37 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 						context.write(new Text(entry.getKey()+"-null"),one);
 						
 					// JSON "primitives" are Boolean, Number, and String
-					} else if (jv.isJsonPrimitive()) {
-						if (jv.getAsJsonPrimitive().isBoolean()){
-							context.write(new Text(entry.getKey()+"-boolean"),one);
-						}else if (jv.getAsJsonPrimitive().isNumber()){
-							context.write(new Text(entry.getKey()+"-number"),one);
-						}else if (jv.getAsJsonPrimitive().isString()){
-							if(jv.getAsString().trim().isEmpty()){
-								context.write(new Text(entry.getKey()+"-blank-string"),one);
-							}else{
-								context.write(new Text(entry.getKey()+"-string"),one);
-							}
-						}else{
-							context.write(new Text(entry.getKey()+"-primitive-unknown"),one);
-						}
+// 					} else if (jv.isJsonPrimitive()) {
+// 						if (jv.getAsJsonPrimitive().isBoolean()){
+// 							context.write(new Text(entry.getKey()+"-boolean"),one);
+// 						}else if (jv.getAsJsonPrimitive().isNumber()){
+// 							context.write(new Text(entry.getKey()+"-number"),one);
+// 						}else if (jv.getAsJsonPrimitive().isString()){
+// 							if(jv.getAsString().trim().isEmpty()){
+// 								context.write(new Text(entry.getKey()+"-blank-string"),one);
+// 							}else{
+// 								context.write(new Text(entry.getKey()+"-string"),one);
+// 							}
+// 						}else{
+// 							context.write(new Text(entry.getKey()+"-primitive-unknown"),one);
+// 						}
 
 					// JSON "arrays" have a [a, b, c] structure with elements separated by commas
 					} else if (jv.isJsonArray()) {
-						if(jv.getAsJsonArray().size() == 0){
-							context.write(new Text(entry.getKey()+"-empty-array"),one);
+						if(jv.getAsJsonArray().size() != 0){
+							context.write(new Text(entry.getKey("image")),one);
 						}else{
-							context.write(new Text(entry.getKey()+"-array"),one);
+							context.write(new Text("missing"),one);
 						}
 						
-					// JSON "objects" have a {a, b, c} structure with elements separated by commas
-					} else if (jv.isJsonObject()) {
-						Set<Map.Entry<String, JsonElement>> innerEntrySet = jv.getAsJsonObject().entrySet();
-						if(innerEntrySet.isEmpty()){
-							context.write(new Text(entry.getKey()+"-empty-object"),one);
-						}else{
-							context.write(new Text(entry.getKey()+"-object"),one);
-						}
+// 					// JSON "objects" have a {a, b, c} structure with elements separated by commas
+// 					} else if (jv.isJsonObject()) {
+// 						Set<Map.Entry<String, JsonElement>> innerEntrySet = jv.getAsJsonObject().entrySet();
+// 						if(innerEntrySet.isEmpty()){
+// 							context.write(new Text(entry.getKey()+"-empty-object"),one);
+// 						}else{
+// 							context.write(new Text(entry.getKey()+"-object"),one);
+// 						}
 						
 					} else {
 						// This should never happen!
