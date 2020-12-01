@@ -108,44 +108,48 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				
 				// Now we parse the string into a JsonElement so we can dig into it
 				JsonElement jsonTree = parser.parse(jsonString);
+				JsonObject jsonObject = jsonTree.getAsJsonObject();
+				
+				String review = jsonObject.get("overall").getAsString();
+				
+				if (review.equals("1.0")){
+					context.write(new Text("Negative" + jsonObject.get("image"),one);
+				}
+				
+				else if (review.equals("2.0")){
+					context.write(new Text("Negative" + jsonObject.get("image"),one);
+				}
+				
+				else if (review.equals("4.0")){
+					context.write(new Text("Positive" + jsonObject.get("image"),one);
+				}
+				
+				else if (review.equals("5.0")){
+					context.write(new Text("Positive" + jsonObject.get("image"),one);
+				}
 				
 				
-				// Now we'll iterate through every top-level "key" in the JSON structure...
-				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
-					// When we write to "context" we're passing data to the reducer
-					// In this case we're passing the JSON field name (e.g. "title") and the number 1 (for 1 instance)
-					context.write(new Text(entry.getKey()),one);
+// 				// Now we'll iterate through every top-level "key" in the JSON structure...
+// 				for (Map.Entry<String, JsonElement> entry : jsonTree.getAsJsonObject().entrySet()) {
+// 					// When we write to "context" we're passing data to the reducer
+// 					// In this case we're passing the JSON field name (e.g. "title") and the number 1 (for 1 instance)
+// 					context.write(new Text(entry.getKey()),one);
 					
-					// Now let's get the value of this field for further analysis:
-					JsonElement jv = entry.getValue();
+// 					// Now let's get the value of this field for further analysis:
+// 					JsonElement jv = entry.getValue();
 					
-					// Report on the field value
-					if (jv.isJsonNull()) {
-						context.write(new Text(entry.getKey()+"-null"),one);
-						
-					// JSON "primitives" are Boolean, Number, and String
-// 					} else if (jv.isJsonPrimitive()) {
-// 						if (jv.getAsJsonPrimitive().isBoolean()){
-// 							context.write(new Text(entry.getKey()+"-boolean"),one);
-// 						}else if (jv.getAsJsonPrimitive().isNumber()){
-// 							context.write(new Text(entry.getKey()+"-number"),one);
-// 						}else if (jv.getAsJsonPrimitive().isString()){
-// 							if(jv.getAsString().trim().isEmpty()){
-// 								context.write(new Text(entry.getKey()+"-blank-string"),one);
-// 							}else{
-// 								context.write(new Text(entry.getKey()+"-string"),one);
-// 							}
-// 						}else{
-// 							context.write(new Text(entry.getKey()+"-primitive-unknown"),one);
-// 						}
+// 					// Report on the field value
+// 					if (jv.isJsonNull()) {
+// 						context.write(new Text(entry.getKey()+"-null"),one);
+			
 
-					// JSON "arrays" have a [a, b, c] structure with elements separated by commas
-					} else if (jv.isJsonArray()) {
-						if(jv.jsonObject.get("image").getAsJsonArray().size() > 0){
-							context.write(new Text(entry.getKey("image")),one);
-						}else{
-							context.write(new Text("missing"),one);
-						}
+// 					// JSON "arrays" have a [a, b, c] structure with elements separated by commas
+// 					} else if (jv.isJsonArray()) {
+// 						if(jv.jsonObject.get("image").getAsJsonArray().size() > 0){
+// 							context.write(new Text(entry.getKey("image")),one);
+// 						}else{
+// 							context.write(new Text("missing"),one);
+// 						}
 						
 // 					// JSON "objects" have a {a, b, c} structure with elements separated by commas
 // 					} else if (jv.isJsonObject()) {
@@ -156,11 +160,11 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 // 							context.write(new Text(entry.getKey()+"-object"),one);
 // 						}
 						
-					} else {
-						// This should never happen!
-						context.write(new Text(entry.getKey()+"-unknown"),one);
-					}
-				}
+// 					} else {
+// 						// This should never happen!
+// 						context.write(new Text(entry.getKey()+"-unknown"),one);
+// 					}
+// 				}
 			
 				// Here we increment a counter that we can read when the job is done
 				rowsProcessed.increment(1);
