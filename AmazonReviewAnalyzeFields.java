@@ -119,7 +119,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				}
 									    
 				else if (review.equals("2.0")  && jsonObject.has("image")) {
-					context.write(new Text("Negative_1"), one);
+					context.write(new Text("Negative_2"), one);
 				}
 										 
 				else if (review.equals("4.0")  && jsonObject.has("image")) {
