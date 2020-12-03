@@ -60,7 +60,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 
     		// This helper will configure how table data feeds into the "map" method
 		TableMapReduceUtil.initTableMapperJob(
-			"rfox12:reviews_10000",        	// input HBase table name
+			"rfox12:reviews",        	// input HBase table name
 			scan,             		// Scan instance to control CF and attribute selection
 			MapReduceMapper.class,   	// Mapper class
 			Text.class,             	// Mapper output key
@@ -110,26 +110,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				JsonElement jsonTree = parser.parse(jsonString);
 				JsonObject jsonObject = jsonTree.getAsJsonObject();
 				
-// 				Reviews with images more likely to be positive or negative
-// 				String review = jsonObject.get("overall").getAsString();
-				
-							
-// 				if (jsonObject.has("image") && review.equals("1.0")) {
-// 					context.write(new Text("Negative_1"), one);
-// 				}
-									    
-// 				else if (jsonObject.has("image") && review.equals("2.0")) {
-// 					context.write(new Text("Negative_2"), one);
-// 				}
-										 
-// 				else if (jsonObject.has("image") && review.equals("4.0")) {
-// 					context.write(new Text("Positive_4"), one);
-// 				}
-										 
-// 				else if (jsonObject.has("image") && review.equals("5.0")) {
-// 					context.write(new Text("Positive_5"), one);
-// 				}
-				
+
 // 				Reviewer population break down into: Unverified, Verified, Mixed
 				String verified = jsonObject.get("verified").getAsString();
 				
