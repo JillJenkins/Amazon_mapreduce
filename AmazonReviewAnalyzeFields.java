@@ -135,15 +135,15 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 
 // 				Reviewer population break down: Unverified, Verified, Mixed
 				
-// 				String verified = jsonObject.get("verified").getAsString();
+				String verified = jsonObject.get("verified").getAsString();
 				
-// 				if (verified.equals("true")) {
-// 					context.write(new Text("true"), one);
-// 				}
+				if (verified.equals("true")) {
+					context.write(new Text("true"), one);
+				}
 				  
-// 				else if (verified.equals("false")) {
-// 					context.write(new Text("false"), one);
-// 				}
+				else if (verified.equals("false")) {
+					context.write(new Text("false"), one);
+				}
 					
 					
 				
