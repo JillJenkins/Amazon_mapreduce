@@ -10,18 +10,18 @@ You can test a small snipped of code (e.g. JSON parsing and manipulation) using 
 2. Click on the `...` button after the `Execute` button.  Then select "*External Libraries (from Maven repo)*" and paste in `com.google.code.gson:gson:2.8.6`
 3. Paste the code from `test_harness.java` into the text window and select `Execute`
 
-# Executing AmazonProductAnalyzeFields
+# Executing AmazonReviewAnalyzeFields
 1. Log into dsba-hadoop.uncc.edu using ssh
 2. `git clone https://github.com/JillJenkins/Amazon_mapreduce.git` to clone this repo
 3. Go into the repo directory.  In this case: `cd Amazon_mapreduce`
 4. Make a "build" directory (if it does not already exist): `mkdir build`
 5. Compile the java code (all one line).  You may see some warnings--that' ok. 
-`javac -cp /opt/cloudera/parcels/CDH/lib/hadoop/client/*:/opt/cloudera/parcels/CDH/lib/hbase/* AmazonReviewsAnalyzeFields.java -d build -Xlint`
-6. Now we wrap up our code into a Java "jar" file: `jar -cvf process_reviews_full.jar -C build/ .`
+`javac -cp /opt/cloudera/parcels/CDH/lib/hadoop/client/*:/opt/cloudera/parcels/CDH/lib/hbase/* AmazonReviewAnalyzeFields.java -d build -Xlint`
+6. Now we wrap up our code into a Java "jar" file: `jar -cvf reviews_full.jar -C build/ .`
 7. This is the final step  
- - Note that you will need to delete the output folder if it already exists: `hadoop fs -rm -r /user/jjenki76/product_fields` otherwise you will get an "Exception in thread "main" org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://dsba-nameservice/user/... type of error.
- - Now we execute the map-reduce job: `HADOOP_CLASSPATH=$(hbase mapredcp):/etc/hbase/conf hadoop jar process_reviews_full.jar AmazonReviewsAnalyzeFields '/user/jjenki76/product_reviews_full'`
- - Once that job completes, you can concatenate the output across all output files with: `hadoop fs -cat /user/jjenki76/product_reviews_full/*` or if you have output that is too big for displaying on the terminal screen you can do `hadoop fs -cat /user/rfox12/product_fields/* > output.txt` to redirect all output to `output.txt`
+ - Note that you will need to delete the output folder if it already exists: `hadoop fs -rm -r /user/jjenki76/reviews_full` otherwise you will get an "Exception in thread "main" org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://dsba-nameservice/user/... type of error.
+ - Now we execute the map-reduce job: `HADOOP_CLASSPATH=$(hbase mapredcp):/etc/hbase/conf hadoop jar reviews_full.jar AmazonReviewAnalyzeFields '/user/jjenki76/reviews_full'`
+ - Once that job completes, you can concatenate the output across all output files with: `hadoop fs -cat /user/jjenki76/reviews_full/*` or if you have output that is too big for displaying on the terminal screen you can do `hadoop fs -cat /user/jjenki76/reviews_full/* > output.txt` to redirect all output to `output.txt`
  - copying the output to your local machine can be done with `scp`
  
  The output is:
