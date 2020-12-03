@@ -109,18 +109,41 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 				// Now we parse the string into a JsonElement so we can dig into it
 				JsonElement jsonTree = parser.parse(jsonString);
 				JsonObject jsonObject = jsonTree.getAsJsonObject();
+		
+// 				Reviews with images more likely to be positive or negative
+				
+				String review = jsonObject.get("overall").getAsString();
+				
+							
+				if (jsonObject.has("image") && review.equals("1.0")) {
+					context.write(new Text("Negative_1"), one);
+				}
+									    
+				else if (jsonObject.has("image") && review.equals("2.0")) {
+					context.write(new Text("Negative_2"), one);
+				}
+										 
+				else if (jsonObject.has("image") && review.equals("4.0")) {
+					context.write(new Text("Positive_4"), one);
+				}
+										 
+				else if (jsonObject.has("image") && review.equals("5.0")) {
+					context.write(new Text("Positive_5"), one);
+				}
 				
 
-// 				Reviewer population break down into: Unverified, Verified, Mixed
-				String verified = jsonObject.get("verified").getAsString();
+
+// 				Reviewer population break down: Unverified, Verified, Mixed
 				
-				if (verified.equals("true")) {
-					context.write(new Text("true"), one);
-				}
+// 				String verified = jsonObject.get("verified").getAsString();
+				
+// 				if (verified.equals("true")) {
+// 					context.write(new Text("true"), one);
+// 				}
 				  
-				else if (verified.equals("false")) {
-					context.write(new Text("false"), one);
-				}
+// 				else if (verified.equals("false")) {
+// 					context.write(new Text("false"), one);
+// 				}
 					
 					
 				
