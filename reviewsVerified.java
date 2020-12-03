@@ -33,13 +33,13 @@ import org.slf4j.LoggerFactory;
  * This Map-Reduce code will go through every Amazon review in rfox12:reviews
  * It will then output data on the top-level JSON keys
  */
-public class AmazonReviewAnalyzeFields extends Configured implements Tool {
+public class reviewsVerified extends Configured implements Tool {
 	// Just used for logging
-	protected static final Logger LOG = LoggerFactory.getLogger(AmazonReviewAnalyzeFields.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(reviewsVerified.class);
 
 	// This is the execution entry point for Java programs
 	public static void main(String[] args) throws Exception {
-		int res = ToolRunner.run(HBaseConfiguration.create(), new AmazonReviewAnalyzeFields(), args);
+		int res = ToolRunner.run(HBaseConfiguration.create(), new reviewsVerified(), args);
 		System.exit(res);
 	}
 
@@ -50,8 +50,8 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 		}
 
 		// Now we create and configure a map-reduce "job"     
-		Job job = Job.getInstance(getConf(), "AmazonReviewAnalyzeFields");
-		job.setJarByClass(AmazonReviewAnalyzeFields.class);
+		Job job = Job.getInstance(getConf(), "reviewsVerified");
+		job.setJarByClass(reviewsVerified.class);
     
     		// By default we are going to can every row in the table
 		Scan scan = new Scan();
@@ -60,7 +60,8 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 
     		// This helper will configure how table data feeds into the "map" method
 		TableMapReduceUtil.initTableMapperJob(
-			"rfox12:reviews",        	// input HBase table name - full reviews tables
+			"rfox12:reviews",        	// HBase table FULL reviews (154M)
+// 			"rfox12:reviews_10000",		// HBase table SUBSET reviews (10k)
 			scan,             		// Scan instance to control CF and attribute selection
 			MapReduceMapper.class,   	// Mapper class
 			Text.class,             	// Mapper output key
@@ -96,7 +97,7 @@ public class AmazonReviewAnalyzeFields extends Configured implements Tool {
 		@Override
 		protected void setup(Context context) {
 			parser = new JsonParser();
-			rowsProcessed = context.getCounter("AmazonReviewAnalyzeFields", "Rows Processed");
+			rowsProcessed = context.getCounter("reviewsVerified", "Rows Processed");
     		}
   
   		// This "map" method is called with every row scanned.  
